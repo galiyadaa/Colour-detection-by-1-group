@@ -26,6 +26,15 @@ def get_color_name(rgb, color_data):
     """
     Get the color name that is closest to the provided RGB values.
 
+def draw_function(event, x, y, flags, param):
+    global b, g, r, xpos, ypos, clicked
+
+    if event == cv2.EVENT_LBUTTONDBLCLK:
+        clicked = True
+        xpos, ypos = x, y
+        b, g, r = map(int, img[y, x])
+
+
     Parameters:
     - rgb (tuple): The RGB values as a tuple (R, G, B).
     - color_data (DataFrame): The DataFrame containing color information.
