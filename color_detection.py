@@ -57,7 +57,8 @@ def draw_function(event, x, y, flags, param):
         clicked = True
         xpos, ypos = x, y
         b, g, r = map(int, img[y, x])
-def getColorName(R,G,B):
-    minimum = 10000
-    for i in range(len(csv)):
-        d = abs(R- int(csv.loc[i,"R"])) + abs(G- int(csv.loc[i,"G"]))+ abs(B- int(csv.loc[i,"B"]))
+#cv2.rectangle(image, startpoint, endpoint, color, thickness)-1 fills entire rectangle 
+        cv2.rectangle(img,(20,20), (750,60), (b,g,r), -1)
+
+#Creating text string to display( Color name and RGB values )
+        text = getColorName(r,g,b) + ' R='+ str(r) +  ' G='+ str(g) +  ' B='+ str(b)
