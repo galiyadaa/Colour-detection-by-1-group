@@ -57,4 +57,7 @@ def draw_function(event, x, y, flags, param):
         clicked = True
         xpos, ypos = x, y
         b, g, r = map(int, img[y, x])
-
+def getColorName(R,G,B):
+    minimum = 10000
+    for i in range(len(csv)):
+        d = abs(R- int(csv.loc[i,"R"])) + abs(G- int(csv.loc[i,"G"]))+ abs(B- int(csv.loc[i,"B"]))
