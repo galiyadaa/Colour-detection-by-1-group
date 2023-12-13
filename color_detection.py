@@ -57,6 +57,16 @@ def draw_function(event, x, y, flags, param):
         clicked = True
         xpos, ypos = x, y
         b, g, r = map(int, img[y, x])
+       
+cv2.namedWindow('image')
+cv2.setMouseCallback('image',draw_function)
+
+while(1):
+
+    cv2.imshow("image",img)
+    if (clicked)
+
+        
         #cv2.rectangle(image, startpoint, endpoint, color, thickness)-1 fills entire rectangle 
         cv2.rectangle(img,(20,20), (750,60), (b,g,r), -1)
 
@@ -71,3 +81,9 @@ def draw_function(event, x, y, flags, param):
             cv2.putText(img, text,(50,50),2,0.8,(0,0,0),2,cv2.LINE_AA)
             
         clicked=False
+
+    
+    #Break the loop when user hits 'esc' key    
+    if cv2.waitKey(20) & 0xFF ==27:
+        break
+    
