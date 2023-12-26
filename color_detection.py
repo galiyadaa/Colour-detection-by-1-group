@@ -1,16 +1,10 @@
 # Importing necessary libraries
 import cv2          # OpenCV for image processing
-import numpy as np   # NumPy for numerical operations
 import pandas as pd  # Pandas for data manipulation
-import argparse     # Argparse for command-line argument parsing
 
-# Creating an argument parser to obtain the image path from the command line
-arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument('-i', '--image', required=True, help="Path to the image")
-arguments = vars(arg_parser.parse_args())
-image_path = arguments['image']
 
 # Reading the image using OpenCV
+image_path = arguments['image']
 image = cv2.imread(image_path)
 
 # Declaring global variables for later use
@@ -22,68 +16,53 @@ red_value = green_value = blue_value = x_position = y_position = 0
 columns = ["color", "color_name", "hex", "R", "G", "B"]
 color_data = pd.read_csv('colors.csv', names=columns, header=None)
 
-def get_color_name(rgb, color_data):
-    """
-    Get the color name that is closest to the provided RGB values.
-    Parameters:
-    - rgb (tuple): The RGB values as a tuple (R, G, B).
-    - color_data (DataFrame): The DataFrame containing color information.
+# function to calculate minimum distance from all colors and get the most matching color
+def Get_Color_Name(R, G, B):
+    minimum = 10000
+    for i in range(len(csv)):
+        d = abs(R - int(csv.loc[i, "R"])) + abs(G - int(csv.loc[i, "G"])) + abs(B - int(csv.loc[i, "B"]))
+        if (d <= minimum):
+            minimum = d
+            color_name = csv.loc[i, "color_name"]
+    return color_name
 
-    Returns:
-    - str: The name of the closest matching color.
-    """
-    min_distance = float('inf')  # Initialize with positive infinity
-    closest_color_name = "Unknown Color"
-
-    for i in range(len(color_data)):
-        color_rgb = color_data.loc[i, ["R", "G", "B"]].values
-        d = sum(abs(x - y) for x, y in zip(rgb, color_rgb))
-
-        if d < min_distance:
-            min_distance = d
-            closest_color_name = color_data.loc[i, "color_name"]
-
-    return closest_color_name
-
-# Example usage:
-input_color = (100, 150, 200)
-result_color_name = get_color_name(input_color, colors.csv)
-print(f"The closest matching color is: {result_color_name}")
-
-def draw_function(event, x, y, flags, param):
-    global b, g, r, xpos, ypos, clicked
-
+def Draw_Function(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDBLCLK:
-        clicked = True
-        xpos, ypos = x, y
-        b, g, r = map(int, img[y, x])
+        global b, g, r, xpos, ypos, is_clicked
+        is_clicked = True
+        xpos = x
+        ypos = y
+        b, g, r = img[y, x]
+        b = int(b)
+        g = int(g)
+        r = int(r)
        
-cv2.namedWindow('image')
-cv2.setMouseCallback('image',draw_function)
+cv2.namedWindow('Color detection')
+cv2.setMouseCallback('Color detection', Draw_Function)
 
-while(1):
+while (1):
 
-    cv2.imshow("image",img)
-    if (clicked)
+    cv2.imshow("Color detection", img)
+    if (is_clicked):
 
-        
-        #cv2.rectangle(image, startpoint, endpoint, color, thickness)-1 fills entire rectangle 
-        cv2.rectangle(img,(20,20), (750,60), (b,g,r), -1)
+        # cv2.rectangle(image, startpoint, endpoint, color, thickness)-1 fills entire rectangle
+        cv2.rectangle(img, (20, 20), (750, 60), (b, g, r), -1)
 
-        #Creating text string to display( Color name and RGB values )
-        text = getColorName(r,g,b) + ' R='+ str(r) +  ' G='+ str(g) +  ' B='+ str(b)
+        # Creating text string to display( Color name and RGB values )
+        text = Get_Color_Name(r, g, b) + ' R=' + str(r) + ' G=' + str(g) + ' B=' + str(b)
 
-        #cv2.putText(img,text,start,font(0-7),fontScale,color,thickness,lineType )
-        cv2.putText(img, text,(50,50),2,0.8,(255,255,255),2,cv2.LINE_AA)
+        # cv2.putText(img,text,start,font(0-7),fontScale,color,thickness,lineType )
+        cv2.putText(img, text, (50, 50), 2, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
 
-        #For very light colours we will display text in black colour
-        if(r+g+b>=600):
-            cv2.putText(img, text,(50,50),2,0.8,(0,0,0),2,cv2.LINE_AA)
-            
-        clicked=False
+        # For very light colours we will display text in black colour
+        if (r + g + b >= 600):
+            cv2.putText(img, text, (50, 50), 2, 0.8, (0, 0, 0), 2, cv2.LINE_AA)
 
-    
-    #Break the loop when user hits 'esc' key    
-    if cv2.waitKey(20) & 0xFF ==27:
+        is_clicked = False
+
+    # Break the loop when user hits 'esc' key
+    if cv2.waitKey(20) & 0xFF == 27:
         break
+
+cv2.destroyAllWindows()
     
